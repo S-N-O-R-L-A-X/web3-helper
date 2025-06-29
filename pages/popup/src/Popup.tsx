@@ -7,6 +7,7 @@ import type { TrackedProject } from '@extension/storage';
 
 const Popup = () => {
   const projects = useStorage(trackedProjectsStorage) as TrackedProject[];
+  const [showModal, setShowModal] = useState(false);
   const [newProjectName, setNewProjectName] = useState('');
   const [newProjectStatus, setNewProjectStatus] = useState('');
   const [needDailyCheckIn, setNeedDailyCheckIn] = useState(false);
@@ -28,34 +29,52 @@ const Popup = () => {
     setNewProjectName('');
     setNewProjectStatus('');
     setNeedDailyCheckIn(false);
+    setShowModal(false);
   };
 
   return (
     <div className={cn('App')}>
       <h2 className="mb-2 text-lg font-bold">正在跟踪的Web3项目</h2>
-      <div className="mb-4 flex flex-col gap-2 rounded bg-gray-100 p-2 dark:bg-gray-800">
-        <input
-          className="rounded border px-2 py-1 text-sm"
-          placeholder="项目名称"
-          value={newProjectName}
-          onChange={e => setNewProjectName(e.target.value)}
-        />
-        <input
-          className="rounded border px-2 py-1 text-sm"
-          placeholder="项目状态（可选）"
-          value={newProjectStatus}
-          onChange={e => setNewProjectStatus(e.target.value)}
-        />
-        <label className="flex items-center gap-2 text-xs">
-          <input type="checkbox" checked={needDailyCheckIn} onChange={e => setNeedDailyCheckIn(e.target.checked)} />
-          需要每日签到
-        </label>
-        <button
-          className="rounded bg-green-500 px-2 py-1 text-xs text-white hover:bg-green-600"
-          onClick={handleAddProject}>
-          添加项目
-        </button>
-      </div>
+      <button
+        className="mb-4 rounded bg-green-500 px-2 py-1 text-xs text-white hover:bg-green-600"
+        onClick={() => setShowModal(true)}>
+        添加项目
+      </button>
+      {showModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
+          <div className="w-80 rounded bg-white p-4 shadow-lg dark:bg-gray-800">
+            <h3 className="mb-2 text-base font-bold">添加新项目</h3>
+            <input
+              className="mb-2 w-full rounded border px-2 py-1 text-sm"
+              placeholder="项目名称"
+              value={newProjectName}
+              onChange={e => setNewProjectName(e.target.value)}
+            />
+            <input
+              className="mb-2 w-full rounded border px-2 py-1 text-sm"
+              placeholder="项目状态（可选）"
+              value={newProjectStatus}
+              onChange={e => setNewProjectStatus(e.target.value)}
+            />
+            <label className="mb-2 flex items-center gap-2 text-xs">
+              <input type="checkbox" checked={needDailyCheckIn} onChange={e => setNeedDailyCheckIn(e.target.checked)} />
+              需要每日签到
+            </label>
+            <div className="flex justify-end gap-2">
+              <button
+                className="rounded bg-gray-300 px-2 py-1 text-xs text-gray-700 hover:bg-gray-400 dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-600"
+                onClick={() => setShowModal(false)}>
+                取消
+              </button>
+              <button
+                className="rounded bg-green-500 px-2 py-1 text-xs text-white hover:bg-green-600"
+                onClick={handleAddProject}>
+                提交
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
       {projects.length === 0 ? (
         <div className="text-gray-500">暂无项目</div>
       ) : (
