@@ -50,12 +50,15 @@ const Popup = () => {
               value={newProjectName}
               onChange={e => setNewProjectName(e.target.value)}
             />
-            <input
+            <select
               className="mb-2 w-full rounded border px-2 py-1 text-sm"
-              placeholder="项目状态（可选）"
               value={newProjectStatus}
-              onChange={e => setNewProjectStatus(e.target.value)}
-            />
+              onChange={e => setNewProjectStatus(e.target.value)}>
+              <option value="">请选择项目状态</option>
+              <option value="已发放空投">已发放空投</option>
+              <option value="已完成任务">已完成任务</option>
+              <option value="正进行">正进行</option>
+            </select>
             <label className="mb-2 flex items-center gap-2 text-xs">
               <input type="checkbox" checked={needDailyCheckIn} onChange={e => setNeedDailyCheckIn(e.target.checked)} />
               需要每日签到
