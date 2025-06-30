@@ -32,6 +32,17 @@ const Popup = () => {
     setShowModal(false);
   };
 
+  const handleExport = () => {
+    const dataStr = JSON.stringify(projects, null, 2);
+    const blob = new Blob([dataStr], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'tracked-projects.json';
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
   return (
     <div className={cn('App')}>
       <h2 className="mb-2 text-lg font-bold">正在跟踪的Web3项目</h2>
@@ -39,6 +50,11 @@ const Popup = () => {
         className="mb-4 rounded bg-green-500 px-2 py-1 text-xs text-white hover:bg-green-600"
         onClick={() => setShowModal(true)}>
         添加项目
+      </button>
+      <button
+        className="mb-4 ml-2 rounded bg-blue-500 px-2 py-1 text-xs text-white hover:bg-blue-600"
+        onClick={handleExport}>
+        导出项目JSON
       </button>
       {showModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
