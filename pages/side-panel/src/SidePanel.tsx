@@ -75,9 +75,10 @@ const SidePanel = () => {
               value={newProjectStatus}
               onChange={e => setNewProjectStatus(e.target.value)}>
               <option value="">请选择项目状态</option>
-              <option value="已发放空投">已发放空投</option>
-              <option value="已完成任务">已完成任务</option>
               <option value="正进行">正进行</option>
+              <option value="已完成任务等待空投">已完成任务等待空投</option>
+              <option value="已发放一期空投">已发放空投继续任务</option>
+              <option value="已结束">已结束</option>
             </select>
             <label className="mb-2 flex items-center gap-2 text-xs">
               <input type="checkbox" checked={needDailyCheckIn} onChange={e => setNeedDailyCheckIn(e.target.checked)} />
