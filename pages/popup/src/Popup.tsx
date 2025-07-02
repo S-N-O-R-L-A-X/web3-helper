@@ -43,6 +43,10 @@ const Popup = () => {
     URL.revokeObjectURL(url);
   };
 
+  const handleDeleteProject = async (id: string) => {
+    await trackedProjectsStorage.set((prev: TrackedProject[]) => prev.filter(p => p.id !== id));
+  };
+
   return (
     <div className={cn('App')}>
       <h2 className="mb-2 text-lg font-bold">正在跟踪的Web3项目</h2>
@@ -102,7 +106,15 @@ const Popup = () => {
             <li key={p.id} className="flex flex-col gap-1 rounded bg-white p-2 dark:bg-gray-700">
               <div className="flex items-center justify-between">
                 <span className="font-medium">{p.name}</span>
-                <span className="text-xs text-gray-400">{p.status}</span>
+                <div className="flex items-center gap-2">
+                  <span className="text-xs text-gray-400">{p.status}</span>
+                  <button
+                    className="ml-1 rounded bg-red-500 px-2 py-0.5 text-xs text-white hover:bg-red-600"
+                    title="删除项目"
+                    onClick={() => handleDeleteProject(p.id)}>
+                    删除
+                  </button>
+                </div>
               </div>
               {p.needDailyCheckIn && (
                 <div className="mt-1 flex items-center gap-2">
