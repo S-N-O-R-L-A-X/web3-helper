@@ -108,7 +108,21 @@ const SidePanel = () => {
               <div className="flex items-center justify-between">
                 <span className="font-medium">{p.name}</span>
                 <div className="flex items-center gap-2">
-                  <span className="text-xs text-gray-400">{p.status}</span>
+                  {/* 状态下拉框，可编辑 */}
+                  <select
+                    className="rounded border bg-gray-100 px-1 py-0.5 text-xs dark:bg-gray-800"
+                    value={p.status}
+                    onChange={async e => {
+                      const newStatus = e.target.value;
+                      await trackedProjectsStorage.set((prev: TrackedProject[]) =>
+                        prev.map(item => (item.id === p.id ? { ...item, status: newStatus } : item)),
+                      );
+                    }}>
+                    <option value="正进行">正进行</option>
+                    <option value="已完成任务等待空投">已完成任务等待空投</option>
+                    <option value="已发放一期空投">已发放空投继续任务</option>
+                    <option value="已结束">已结束</option>
+                  </select>
                   <button
                     className="ml-1 rounded bg-red-500 px-2 py-0.5 text-xs text-white hover:bg-red-600"
                     title="删除项目"
