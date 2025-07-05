@@ -2,8 +2,25 @@ import '@src/SidePanel.css';
 import { useStorage, withErrorBoundary, withSuspense } from '@extension/shared';
 import { trackedProjectsStorage } from '@extension/storage';
 import { cn, ErrorDisplay, LoadingSpinner } from '@extension/ui';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import type { TrackedProject } from '@extension/storage';
+
+async function getBeijingDateStr() {
+  try {
+    const resp = await fetch('https://worldtimeapi.org/api/timezone/Asia/Shanghai');
+    const data = await resp.json();
+    const date = new Date(data.datetime);
+    if (date.getHours() < 4) {
+      date.setDate(date.getDate() - 1);
+    }
+    return date.toISOString().slice(0, 10);
+  } catch {
+    const now = new Date();
+    now.setHours(now.getHours() + 8 - now.getTimezoneOffset() / 60);
+    if (now.getHours() < 4) now.setDate(now.getDate() - 1);
+    return now.toISOString().slice(0, 10);
+  }
+}
 
 const SidePanel = () => {
   const projects = useStorage(trackedProjectsStorage) as TrackedProject[];
@@ -11,9 +28,55 @@ const SidePanel = () => {
   const [newProjectName, setNewProjectName] = useState('');
   const [newProjectStatus, setNewProjectStatus] = useState('');
   const [needDailyCheckIn, setNeedDailyCheckIn] = useState(false);
+  const [beijingDate, setBeijingDate] = useState<string>('');
+
+  useEffect(() => {
+    // 页面可见时立即刷新
+    const handleVisibility = () => {
+      if (document.visibilityState === 'visible') {
+        update();
+      }
+    };
+    const update = async () => {
+      const d = await getBeijingDateStr();
+      setBeijingDate(prev => (prev !== d ? d : prev));
+    };
+    update();
+    const timer: NodeJS.Timeout = setInterval(update, 60 * 1000);
+    document.addEventListener('visibilitychange', handleVisibility);
+    return () => {
+      clearInterval(timer);
+      document.removeEventListener('visibilitychange', handleVisibility);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!projects || projects.length === 0 || !beijingDate) return;
+    let cancelled = false;
+    (async () => {
+      const todayStr = beijingDate;
+      let needUpdate = false;
+      const updated = projects.map(p => {
+        if (p.needDailyCheckIn && p.lastCheckInDate !== todayStr) {
+          needUpdate = true;
+          return { ...p, checkedInToday: false, lastCheckInDate: todayStr };
+        }
+        return p;
+      });
+      if (needUpdate && !cancelled) {
+        await trackedProjectsStorage.set(() => updated);
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [projects, beijingDate]);
 
   const handleCheckIn = async (id: string) => {
-    await trackedProjectsStorage.checkIn(id);
+    const todayStr = await getBeijingDateStr();
+    await trackedProjectsStorage.set((prev: TrackedProject[]) =>
+      prev.map(p => (p.id === id ? { ...p, checkedInToday: true, lastCheckInDate: todayStr } : p)),
+    );
   };
 
   const handleAddProject = async () => {

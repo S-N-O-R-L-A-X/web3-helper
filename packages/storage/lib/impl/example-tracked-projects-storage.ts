@@ -21,4 +21,5 @@ export interface TrackedProject {
   status: string;
   needDailyCheckIn: boolean;
   checkedInToday: boolean;
+  lastCheckInDate?: string; // 新增：记录上次签到日期（东八区）
 }
