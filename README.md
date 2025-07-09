@@ -1,27 +1,17 @@
 <div align="center">
 
-<picture>
-    <source media="(prefers-color-scheme: dark)" srcset="https://github.com/user-attachments/assets/99cb6303-64e4-4bed-bf3f-35735353e6de" />
-    <source media="(prefers-color-scheme: light)" srcset="https://github.com/user-attachments/assets/a5dbf71c-c509-4c4f-80f4-be88a1943b0a" />
-    <img alt="Logo" src="https://github.com/user-attachments/assets/99cb6303-64e4-4bed-bf3f-35735353e6de" />
-</picture>
+This is a web3 helper which helps you manage web3 projects.
 
-![](https://img.shields.io/badge/React-61DAFB?style=flat-square&logo=react&logoColor=black)
-![](https://img.shields.io/badge/Typescript-3178C6?style=flat-square&logo=typescript&logoColor=white)
-![](https://badges.aleen42.com/src/vitejs.svg)
+Future:
 
-![GitHub action badge](https://github.com/Jonghakseo/chrome-extension-boilerplate-react-vite/actions/workflows/build-zip.yml/badge.svg)
-![GitHub action badge](https://github.com/Jonghakseo/chrome-extension-boilerplate-react-vite/actions/workflows/lint.yml/badge.svg)
+#### Toolbox:
+- chat automatically
 
-<a href="https://discord.gg/4ERQ6jgV9a" target="_blank"><img src="https://discord.com/api/guilds/1263404974830915637/widget.png"/></a>
+#### sidebar
 
-> This boilerplate
-> has [Legacy version](https://github.com/Jonghakseo/chrome-extension-boilerplate-react-vite/tree/legacy)
 
 </div>
 
-> [!NOTE]
-> This project is listed in the [Awesome Vite](https://github.com/vitejs/awesome-vite)
 
 > [!TIP]
 > Share storage state between all pages
@@ -30,34 +20,30 @@
 
 ## Table of Contents
 
-- [Intro](#intro)
+- [Table of Contents](#table-of-contents)
 - [Features](#features)
-- [Structure](#structure)
-    - [ChromeExtension](#structure-chrome-extension)
-    - [Packages](#structure-packages)
-    - [Pages](#structure-pages)
 - [Installation](#installation)
-    - [Chrome](#installation-chrome)
-    - [Firefox](#installation-firefox)
-- [Install dependency](#install-dependency)
-    - [For root](#install-dependency-for-root)
-    - [For module](#install-dependency-for-module)
-- [Environment variables](#env-variables)
-    - [Add new](#env-variables-new)
-    - [Set via CLI](#env-variables-cli-set)
+  - [For Chrome: ](#for-chrome-)
+  - [For Firefox: ](#for-firefox-)
+- [Install dependency for turborepo: ](#install-dependency-for-turborepo-)
+  - [For root: ](#for-root-)
+  - [For module: ](#for-module-)
+- [How do I disable modules I'm not using?](#how-do-i-disable-modules-im-not-using)
+- [Environment variables](#environment-variables)
+- [Boilerplate structure ](#boilerplate-structure-)
+  - [Chrome extension ](#chrome-extension-)
+  - [Pages ](#pages-)
+  - [Packages ](#packages-)
 - [Troubleshooting](#troubleshooting)
-    - [Hot module reload seems to have frozen](#hot-module-reload-seems-to-have-frozen)
-    - [Imports not resolving correctly](#imports-not-resolving-correctly)
+  - [Hot module reload seems to have frozen](#hot-module-reload-seems-to-have-frozen)
+  - [Imports not resolving correctly](#imports-not-resolving-correctly)
 - [Community](#community)
 - [Debugging](#debugging)
 - [Reference](#reference)
-- [Star History](#star-history)
-- [Contributors](#contributors)
+- [Star History ](#star-history-)
+- [Contributors ](#contributors-)
+- [Special Thanks To](#special-thanks-to)
 
-## Intro
-
-This boilerplate helps you create Chrome/Firefox extensions using React and Typescript. It improves
-the build speed and development experience by using Vite and Turborepo.
 
 ## Features
 
