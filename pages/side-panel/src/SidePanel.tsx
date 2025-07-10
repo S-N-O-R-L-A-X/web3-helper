@@ -50,6 +50,13 @@ const SidePanel = () => {
     };
   }, []);
 
+  const handleCheckIn = async (id: string) => {
+    if (!beijingDate) return;
+    await trackedProjectsStorage.set((prev: TrackedProject[]) =>
+      prev.map(p => (p.id === id ? { ...p, checkedInToday: true, lastCheckInDate: beijingDate } : p)),
+    );
+  };
+
   useEffect(() => {
     if (!projects || projects.length === 0 || !beijingDate) return;
     let cancelled = false;
@@ -70,14 +77,7 @@ const SidePanel = () => {
     return () => {
       cancelled = true;
     };
-  }, [projects, beijingDate]);
-
-  const handleCheckIn = async (id: string) => {
-    const todayStr = await getBeijingDateStr();
-    await trackedProjectsStorage.set((prev: TrackedProject[]) =>
-      prev.map(p => (p.id === id ? { ...p, checkedInToday: true, lastCheckInDate: todayStr } : p)),
-    );
-  };
+  }, [beijingDate]); // 只依赖 beijingDate，避免 projects 变化导致重复重置
 
   const handleAddProject = async () => {
     if (!newProjectName.trim()) return;
