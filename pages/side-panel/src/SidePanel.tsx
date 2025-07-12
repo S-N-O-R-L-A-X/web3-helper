@@ -50,10 +50,17 @@ const SidePanel = () => {
     };
   }, []);
 
-  const handleCheckIn = async (id: string) => {
+  // 签到/取消签到
+  const handleCheckIn = async (id: string, checkedIn: boolean) => {
     if (!beijingDate) return;
     await trackedProjectsStorage.set((prev: TrackedProject[]) =>
-      prev.map(p => (p.id === id ? { ...p, checkedInToday: true, lastCheckInDate: beijingDate } : p)),
+      prev.map(p =>
+        p.id === id
+          ? checkedIn
+            ? { ...p, checkedInToday: false }
+            : { ...p, checkedInToday: true, lastCheckInDate: beijingDate }
+          : p,
+      ),
     );
   };
 
@@ -198,11 +205,15 @@ const SidePanel = () => {
                 <div className="mt-1 flex items-center gap-2">
                   <span className="text-xs">每日签到：</span>
                   {p.checkedInToday ? (
-                    <span className="text-green-500">已签到</span>
+                    <button
+                      className="rounded bg-gray-300 px-2 py-1 text-xs text-green-600 hover:bg-gray-400 dark:bg-gray-700 dark:text-green-400 dark:hover:bg-gray-600"
+                      onClick={() => handleCheckIn(p.id, true)}>
+                      已签到（点击取消）
+                    </button>
                   ) : (
                     <button
                       className="rounded bg-blue-500 px-2 py-1 text-xs text-white hover:bg-blue-600"
-                      onClick={() => handleCheckIn(p.id)}>
+                      onClick={() => handleCheckIn(p.id, false)}>
                       签到
                     </button>
                   )}
