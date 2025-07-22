@@ -62,6 +62,7 @@ export default config(
           message: 'Please import from `@extension/shared` instead of `type-fest`.',
         },
       ],
+      'jsx-a11y/no-noninteractive-element-to-interactive-role': 'off',
       'arrow-body-style': ['error', 'as-needed'],
       '@typescript-eslint/consistent-type-imports': 'error',
       '@typescript-eslint/consistent-type-exports': 'error',

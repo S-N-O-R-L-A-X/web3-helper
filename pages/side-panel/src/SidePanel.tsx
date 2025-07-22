@@ -87,7 +87,7 @@ const SidePanel = () => {
     return () => {
       cancelled = true;
     };
-  }, [beijingDate]); // 只依赖 beijingDate，避免 projects 变化导致重复重置
+  }, [beijingDate, projects]); // 只依赖 beijingDate，避免 projects 变化导致重复重置
 
   const handleAddProject = async () => {
     if (!newProjectName.trim()) return;
@@ -148,35 +148,43 @@ const SidePanel = () => {
   return (
     <div className={cn('App')}>
       <h2 className="mb-2 text-lg font-bold">正在跟踪的Web3项目</h2>
-      <div className="mb-4 flex gap-2">
+      <div className="mb-2 flex justify-end gap-2">
         <button
-          className={cn(
-            'rounded px-3 py-1 text-xs font-semibold',
-            activeTab === 'ongoing'
-              ? 'bg-blue-500 text-white shadow'
-              : 'bg-gray-200 text-gray-700 dark:bg-gray-700 dark:text-gray-200',
-          )}
-          onClick={() => setActiveTab('ongoing')}>
-          当前进行中
-        </button>
-        <button
-          className={cn(
-            'rounded px-3 py-1 text-xs font-semibold',
-            activeTab === 'ended'
-              ? 'bg-blue-500 text-white shadow'
-              : 'bg-gray-200 text-gray-700 dark:bg-gray-700 dark:text-gray-200',
-          )}
-          onClick={() => setActiveTab('ended')}>
-          已结束
-        </button>
-        <button
-          className="ml-auto rounded bg-green-500 px-2 py-1 text-xs text-white hover:bg-green-600"
+          className="rounded bg-green-500 px-2 py-1 text-xs text-white hover:bg-green-600"
           onClick={() => setShowModal(true)}>
           添加项目
         </button>
         <button className="rounded bg-blue-500 px-2 py-1 text-xs text-white hover:bg-blue-600" onClick={handleExport}>
           导出项目JSON
         </button>
+      </div>
+      <div className="mb-4 border-b border-gray-200 dark:border-gray-700">
+        <nav className="flex" role="tablist">
+          <button
+            className={cn(
+              '-mb-px border-b-2 px-4 py-2 text-xs font-semibold',
+              activeTab === 'ongoing'
+                ? 'border-blue-500 text-blue-600 dark:text-blue-400'
+                : 'border-transparent text-gray-500 hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-400',
+            )}
+            role="tab"
+            aria-selected={activeTab === 'ongoing'}
+            onClick={() => setActiveTab('ongoing')}>
+            当前进行中
+          </button>
+          <button
+            className={cn(
+              '-mb-px border-b-2 px-4 py-2 text-xs font-semibold',
+              activeTab === 'ended'
+                ? 'border-blue-500 text-blue-600 dark:text-blue-400'
+                : 'border-transparent text-gray-500 hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-400',
+            )}
+            role="tab"
+            aria-selected={activeTab === 'ended'}
+            onClick={() => setActiveTab('ended')}>
+            已结束
+          </button>
+        </nav>
       </div>
       {showModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
