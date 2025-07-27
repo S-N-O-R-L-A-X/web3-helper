@@ -55,6 +55,7 @@ export default config(
       'prefer-const': 'error',
       'no-var': 'error',
       'func-style': 'off',
+      'jsx-a11y/label-has-associated-control': 'off',
       'no-restricted-imports': [
         'error',
         {
