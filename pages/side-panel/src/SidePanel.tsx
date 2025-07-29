@@ -137,6 +137,47 @@ const SidePanel = () => {
     URL.revokeObjectURL(url);
   };
 
+  const handleImport = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = async e => {
+      try {
+        const content = e.target?.result as string;
+        const importedProjects: TrackedProject[] = JSON.parse(content);
+
+        // 验证导入的数据格式
+        if (!Array.isArray(importedProjects)) {
+          throw new Error('JSON格式不正确，应该是一个数组');
+        }
+
+        // 处理导入的项目数据
+        const processedProjects = importedProjects.map(project => ({
+          ...project,
+          // 确保必要的字段存在
+          id: project.id || Date.now().toString() + Math.random().toString(36).substr(2, 9),
+          name: project.name || '未命名项目',
+          status: project.status || '正进行',
+          checkedInToday: false, // 重置签到状态
+          // 如果需要每日签到但没有签到日期，则设置为空
+          lastCheckInDate: project.needDailyCheckIn ? project.lastCheckInDate || '' : undefined,
+        }));
+
+        // 添加到现有项目中
+        await trackedProjectsStorage.set((prev: TrackedProject[]) => [...prev, ...processedProjects]);
+
+        // 重置文件输入
+        event.target.value = '';
+      } catch (error) {
+        console.error('导入项目时出错:', error);
+        alert('导入失败: ' + (error instanceof Error ? error.message : '未知错误'));
+      }
+    };
+
+    reader.readAsText(file);
+  };
+
   const handleDeleteProject = async (id: string) => {
     await trackedProjectsStorage.set((prev: TrackedProject[]) => prev.filter(p => p.id !== id));
   };
@@ -157,6 +198,10 @@ const SidePanel = () => {
         <button className="rounded bg-blue-500 px-2 py-1 text-xs text-white hover:bg-blue-600" onClick={handleExport}>
           导出项目JSON
         </button>
+        <label className="cursor-pointer rounded bg-purple-500 px-2 py-1 text-xs text-white hover:bg-purple-600">
+          导入项目JSON
+          <input type="file" accept=".json" className="hidden" onChange={handleImport} />
+        </label>
       </div>
       <div className="mb-4 border-b border-gray-200 dark:border-gray-700">
         <nav className="flex" role="tablist">
