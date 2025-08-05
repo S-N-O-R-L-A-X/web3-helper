@@ -2,6 +2,21 @@ import 'webextension-polyfill';
 import { exampleThemeStorage, trackedProjectsStorage } from '@extension/storage';
 import axios from 'axios';
 
+// Store API key in memory for quick access
+let openaiApiKey: string | null = null;
+
+// Load API key from storage on startup
+chrome.storage.local.get('openaiApiKey', result => {
+  openaiApiKey = result.openaiApiKey || null;
+});
+
+// Listen for API key updates from the options page
+chrome.runtime.onMessage.addListener(message => {
+  if (message.type === 'API_KEY_UPDATED') {
+    openaiApiKey = message.apiKey;
+  }
+});
+
 exampleThemeStorage.get().then(theme => {
   console.log('theme', theme);
 });
@@ -27,10 +42,9 @@ scheduleDailyReset();
 chrome.runtime.onMessage.addListener(async request => {
   if (request.action === 'processChatWithAI') {
     try {
-      // Get API key from storage
-      const { apiKey } = await chrome.storage.local.get('apiKey');
-      if (!apiKey) {
-        throw new Error('API key not set. Please set it in extension options.');
+      // Use API key from storage
+      if (!openaiApiKey) {
+        throw new Error('API key not configured. Please set your OpenAI API key in the extension options.');
       }
 
       // Prepare API request - request.content is an array of messages
@@ -44,7 +58,7 @@ chrome.runtime.onMessage.addListener(async request => {
         },
         {
           headers: {
-            Authorization: `Bearer ${apiKey}`,
+            Authorization: `Bearer ${openaiApiKey}`,
             'Content-Type': 'application/json',
           },
         },
