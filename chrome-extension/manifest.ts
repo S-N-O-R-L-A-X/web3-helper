@@ -30,7 +30,7 @@ const manifest = {
   },
   version: packageJson.version,
   description: '__MSG_extensionDescription__',
-  host_permissions: ['<all_urls>'],
+  host_permissions: ['<all_urls>', '*://*.discord.com/*'],
   permissions: ['storage', 'scripting', 'tabs', 'notifications', 'sidePanel', 'activeTab'],
   options_page: 'options/index.html',
   background: {
@@ -64,6 +64,11 @@ const manifest = {
     {
       matches: ['http://*/*', 'https://*/*', '<all_urls>'],
       css: ['content.css'],
+    },
+    // Add Discord-specific content script
+    {
+      matches: ['https://*.discord.com/*'],
+      js: ['content/discord.iife.js'],
     },
   ],
   devtools_page: 'devtools/index.html',

@@ -30,6 +30,13 @@ export default defineConfig({
     makeManifestPlugin({ outDir }),
     IS_DEV && watchRebuildPlugin({ reload: true, id: 'chrome-extension-hmr' }),
     nodePolyfills(),
+    {
+      name: 'run-content-build',
+      async buildStart() {
+        // Import the module to trigger the content script build
+        await import('../pages/content/build.mts');
+      },
+    },
   ],
   publicDir: resolve(rootDir, 'public'),
   build: {
