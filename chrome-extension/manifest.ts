@@ -68,7 +68,7 @@ const manifest = {
     // Add Discord-specific content script
     {
       matches: ['https://*.discord.com/*'],
-      js: ['content/discord.iife.js'],
+      js: ['content/all.iife.js'],
     },
   ],
   devtools_page: 'devtools/index.html',
