@@ -21,3 +21,15 @@ const scheduleDailyReset = () => {
 };
 
 scheduleDailyReset();
+
+chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
+  if (request.action === 'processChatWithAI')
+    try {
+      chrome.tabs.sendMessage(request.tabId, {
+        action: 'sendChatResponse',
+        message: 'success',
+      });
+    } catch (i) {
+      console.error('Error processing Discord chat:', i);
+    }
+});

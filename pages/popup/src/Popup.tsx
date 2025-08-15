@@ -33,16 +33,16 @@ const Popup = () => {
       if (!tab || !tab.id) throw new Error('无法获取活动标签页');
 
       // Send message to content script to capture chat
-      const chatContent = await chrome.tabs.sendMessage(tab.id, {
-        action: 'captureDiscordChat',
-      });
+      // const chatContent = await chrome.tabs.sendMessage(tab.id, {
+      //   action: 'captureDiscordChat',
+      // });
 
-      if (!chatContent) throw new Error('无法获取聊天内容');
+      // if (!chatContent) throw new Error('无法获取聊天内容');
 
       // Send to background for processing
       chrome.runtime.sendMessage({
         action: 'processChatWithAI',
-        content: chatContent,
+        content: 'test',
         tabId: tab.id,
       });
     } catch (e) {
