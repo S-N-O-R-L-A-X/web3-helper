@@ -65,13 +65,11 @@ const manifest = {
       matches: ['http://*/*', 'https://*/*', '<all_urls>'],
       css: ['content.css'],
     },
-    // Add Discord-specific content script
     {
       matches: ['https://*.discord.com/*'],
       js: ['content/all.iife.js'],
     },
   ],
-  devtools_page: 'devtools/index.html',
   web_accessible_resources: [
     {
       resources: ['*.js', '*.css', '*.svg', 'icon-128.png', 'icon-34.png'],
