@@ -1,13 +1,12 @@
-import inlineCss from '../../../dist/example/index.css?inline';
+import inlineCss from '../../../dist/discord/index.css?inline';
 import { initAppWithShadow } from '@extension/shared';
-import App from '@src/matches/example/App';
+import App from '@src/matches/discord/App';
 
-initAppWithShadow({ id: 'CEB-extension-runtime-example', app: <App />, inlineCss });
+initAppWithShadow({ id: 'CEB-extension-runtime-discord', app: <App />, inlineCss });
 
-console.log('test');
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   if (message.action === 'sendChatResponse') {
-    alert('test why');
+    console.log('start chat');
   }
   return true; // Indicates we want to send a response asynchronously
 });
