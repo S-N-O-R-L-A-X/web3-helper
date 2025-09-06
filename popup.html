@@ -7,6 +7,15 @@
 
 <body>
 	<h1>Hello, Chrome!</h1>
+	<button id="getContentBtn">Get Content</button>
+	
+	<script>
+		document.getElementById('getContentBtn').addEventListener('click', () => {
+			chrome.tabs.query({active: true, currentWindow: true}, (tabs) => {
+				chrome.tabs.sendMessage(tabs[0].id, {action: "runGetContent"});
+			});
+		});
+	</script>
 </body>
 
 </html>
