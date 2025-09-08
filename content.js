@@ -1,15 +1,31 @@
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-  if (request.action === "runGetContent") {
-    getContent();
-  }
+	console.log("enter listener")
+	if (request.action === "runGetContent") {
+		getContent();
+	}
 });
+
+async function getApiKey() {
+	return new Promise((resolve) => {
+		chrome.runtime.sendMessage({ type: "getApiKey" }, (response) => {
+			resolve(response.apiKey);
+		});
+	});
+}
 
 async function getContent() {
 	try {
+		console.log("enter getContent")
+		const apiKey = await getApiKey();
+		if (!apiKey) {
+			console.error('API key is not set');
+			return;
+		}
+
 		const res = await fetch('https://openrouter.ai/api/v1/chat/completions', {
 			method: 'POST',
 			headers: {
-				Authorization: `Bearer ${env.API_KEY}`,
+				Authorization: `Bearer ${apiKey}`,
 				'Content-Type': 'application/json',
 			},
 			body: JSON.stringify({
@@ -31,7 +47,13 @@ async function getContent() {
 		const content = message.content;
 		alert(content);
 	} catch (e) {
-		console.log(e);
+		console.error('Error in getContent:', e);
+		// Add more detailed error logging
+		if (e instanceof TypeError) {
+			console.error('Network error or CORS issue:', e.message);
+		} else {
+			console.error('Unexpected error:', e);
+		}
 	}
 
 }
