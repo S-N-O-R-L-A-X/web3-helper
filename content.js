@@ -1,7 +1,20 @@
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-	console.log("enter listener")
+	alert("enter listener")
 	if (request.action === "runGetContent") {
 		getContent();
+	}
+	if (request.action === "setApiKey") {
+		const { apiKey } = request;
+		chrome.storage.local.set({ apiKey }, () => {
+			console.log('API key saved:', apiKey);
+		});
+	}
+
+	if (request.action === "getApiKey") {
+		chrome.storage.local.get(['apiKey'], (result) => {
+			sendResponse({ apiKey: result.apiKey });
+		});
+		return true; // indicates we want to send a response asynchronously
 	}
 });
 
