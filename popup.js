@@ -32,22 +32,48 @@ document.getElementById('getContentBtn').addEventListener('click', async () => {
 
 		const data = await res.json();
 		const content = data.choices[0].message.content;
-		// Display result in a new div
-		const resultDiv = document.getElementById('result') || createResultDiv();
-		resultDiv.textContent = content;
+
+		try {
+			// Get the current active tab
+			const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+
+			// Check if we're on a Discord page
+			if (!tab.url.startsWith('https://discord.com/')) {
+				throw new Error('Please open Discord in the current tab first');
+			}
+
+			// Inject content script manually if needed
+			await chrome.scripting.executeScript({
+				target: { tabId: tab.id },
+				files: ['content.js']
+			});
+
+			const response = await chrome.tabs.sendMessage(tab.id, {
+				action: 'inputContent',
+				content: content
+			});
+
+			if (response && response.success) {
+				console.log('Message sent to Discord successfully');
+				return;
+			}
+
+		} catch (err) {
+			console.error('Error sending message to Discord:', err);
+			if (err.message.includes('could not establish connection')) {
+				alert('Please make sure Discord is open in the current tab and refresh the page if needed.');
+			} else {
+				alert('Error: ' + err.message);
+			}
+		}
+
+
 	} catch (error) {
 		console.error('Error in getContent:', error);
 		alert('Error: ' + error.message);
 	}
 });
 
-function createResultDiv() {
-	const resultDiv = document.createElement('div');
-	resultDiv.id = 'result';
-	resultDiv.style.cssText = 'margin-top: 10px; padding: 10px; border: 1px solid #ccc; max-height: 200px; overflow-y: auto; white-space: pre-wrap;';
-	document.body.appendChild(resultDiv);
-	return resultDiv;
-}
 
 document.getElementById('setApiKeyBtn').addEventListener('click', async () => {
 	try {
