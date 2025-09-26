@@ -1,37 +1,38 @@
+async function callGemini() {
+	// Get API key from storage
+	const result = await chrome.storage.local.get(['apiKey']);
+	const apiKey = result.apiKey;
+	if (!apiKey) {
+		alert('Please set your API key first');
+		return;
+	}
+	// Make API call directly from popup
+	const res = await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent', {
+		method: 'POST',
+		headers: {
+			'x-goog-api-key': apiKey,
+			'Content-Type': 'application/json',
+		},
+		body: JSON.stringify({
+			contents: [{
+				parts: [{
+					text: 'What is the meaning of life?',
+				}],
+			}],
+		}),
+	});
+	if (!res.ok) {
+		throw new Error(`API request failed: ${res.status} ${res.statusText}`);
+	}
+	const data = await res.json();
+	const content = data.candidates[0].content.parts[0].text;
+
+	return content;
+}
+
 document.getElementById('getContentBtn').addEventListener('click', async () => {
 	try {
-		// Get API key from storage
-		const result = await chrome.storage.local.get(['apiKey']);
-		const apiKey = result.apiKey;
-		if (!apiKey) {
-			alert('Please set your API key first');
-			return;
-		}
-
-		// Make API call directly from popup
-		const res = await fetch('https://openrouter.ai/api/v1/chat/completions', {
-			method: 'POST',
-			headers: {
-				Authorization: `Bearer ${apiKey}`,
-				'Content-Type': 'application/json',
-			},
-			body: JSON.stringify({
-				model: 'deepseek/deepseek-r1-0528:free',
-				messages: [
-					{
-						role: 'user',
-						content: 'What is the meaning of life?',
-					},
-				],
-			}),
-		});
-
-		if (!res.ok) {
-			throw new Error(`API request failed: ${res.status} ${res.statusText}`);
-		}
-
-		const data = await res.json();
-		const content = data.choices[0].message.content;
+		const content = await callGemini();
 
 		try {
 			// Get the current active tab

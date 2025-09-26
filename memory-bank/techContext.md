@@ -6,6 +6,7 @@
 - **CSS3:** For styling the popup (if any).
 - **JavaScript (ES6+):** For the extension's logic.
 - **Chrome Extension APIs:** `storage`, `tabs`, `activeTab`, `scripting`.
+- **Google Gemini API:** For generative AI capabilities.
 
 ## Development Setup
 

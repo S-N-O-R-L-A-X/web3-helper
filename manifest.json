@@ -8,7 +8,7 @@
 	},
 	"permissions": [ "storage", "tabs", "activeTab", "scripting" ],
 	"host_permissions": [ 
-		"https://openrouter.ai/*",
+		"https://generativelanguage.googleapis.com/*",
 		"https://discord.com/*"
 	],
 	"content_scripts": [
